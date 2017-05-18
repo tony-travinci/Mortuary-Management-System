@@ -13,11 +13,13 @@ import hashlib
 conn = mysql.connector.connect(user='Andrew', password='andy', database='test', host='127.0.0.1', port='3306')
 cursor = conn.cursor()
 
+
 #############################################################################################################
 # This function {passencrypt()} reads password entered by user then compares it to the password in the db   #
 # The password entered is encrypted and compared to the encrypted password stored in the db                 #
 # The function returns a hashed password                                                                    #
 #############################################################################################################
+
 
 ## Using sha512()
 def passencrypt():
