@@ -1,3 +1,5 @@
+## @AUTHOR ANDREW
+
 from tkinter import *
 import mysql.connector
 import hashlib
