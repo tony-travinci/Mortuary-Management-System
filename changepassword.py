@@ -155,11 +155,21 @@ def changepass():
                 print("Passwords do not match")
                 status = False
                 messagebox.showinfo("Error", "New and Confirmed do not match!")
-
-
     except:
         status = False
         print("No Changes made")
+
+    try:
+        if status == True:
+            if andy != newconfirmedpassword:
+                status = True
+                print("New and old passwords do not match")
+            elif andy == newconfirmedpassword:
+                messagebox.showinfo("Error", "New and Old password cannot be the same!")
+                status = False
+    except:
+        status = False
+
 
     try:
         if status == True:
@@ -179,7 +189,8 @@ def changepass():
     except:
         if status == False:
             messagebox.showinfo("PASSWORD", "PASSWORD NOT CHANGED")
-    #reset()
+    if status == True:
+        reset()
 
 
 

@@ -5,7 +5,6 @@
 # Created: Sat Apr 22 10:59:07 2017
 #      by: Paul Cyryl
 #
-
 from PyQt4 import QtCore, QtGui
 
 try:
