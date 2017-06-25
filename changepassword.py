@@ -57,60 +57,129 @@ def changepass():
     status = False
     newpassword=newPasscrypt()
     newconfirmedpassword=newPassConfcrypt()
-    try:
-        cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffEntry.get()))
-        staffid = cursor.fetchone()
-        staffid = str(staffid[0])
-        print(staffid)
-        if staffid is not None:
-            print("cursor null")
 
+    try:
+        if uname != '':
+            print(uname)
+            status = True
+        elif uname == '':
+            print("Blank staff id")
+            messagebox.showinfo("ERROR","STAFF ID FIELD CANNOT BE BLANK")
+            status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffEntry.get()))
+            staffid = cursor.fetchone()
+            staffidone = str(staffid[0])
+            print(staffidone)
+
+            if staffidone is not None:
+                print("cursor null")
             if uname == staffid:
                 status = True
-
+            elif uname != staffidone:
+                print("User does not exist.")
+                messagebox.showinfo("ERROR", "USER DOES NOT EXISTS")
+                status == False
     except:
+        if staffid is None:
+            messagebox.showinfo()
         status = False
         print("here")
 
-    try:
-        cursor.execute("SELECT password FROM users WHERE staffid = '%s'" % (StaffEntry.get()))
-        password = cursor.fetchone()
-        passWord = str(password[0])
 
+    try:
         if status == True:
+            if OldPassEntry.get() != '':
+                print("Got existing  Password")
+                status = True
+            elif OldPassEntry.get() == '':
+                print("Current Pass empty")
+                messagebox.showinfo("Error", "Old password field cannot be empty!")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            cursor.execute("SELECT password FROM users WHERE staffid = '%s'" % (StaffEntry.get()))
+            password = cursor.fetchone()
+            passWord = str(password[0])
+
             print("Got password")
             if andy == passWord:
                 status = True
                 print("Correct Password")
+            elif andy != passWord:
+                messagebox.showinfo("Error", "Old Password entered does not match the old password!")
+                status = False
+                print("More")
     except:
         status=False
         print("more")
 
+
     try:
-        if newpassword == newconfirmedpassword:
-            print("Matching Passwords")
-            status = True
+        if status == True:
+            if NewPassEntry.get() != '':
+                print("Got new password")
+                status = True
+            elif NewPassEntry.get() == '':
+                print("New pass not entered")
+                messagebox.showinfo("Error", "New password field cannot be empty!")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if ConfirmPassEntry.get() != '':
+                print("Got confirmed password")
+                status = True
+            elif ConfirmPassEntry.get() == '':
+                print("Confirmed password not entered")
+                messagebox.showinfo("Error", "Confirmed password field cannot be empty!")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if newpassword == newconfirmedpassword:
+                print("Matching Passwords")
+                status = True
+            elif newpassword != newconfirmedpassword:
+                print("Passwords do not match")
+                status = False
+                messagebox.showinfo("Error", "New and Confirmed do not match!")
+
 
     except:
         status = False
         print("No Changes made")
 
     try:
-        cursor.execute("UPDATE users SET password = '%s' WHERE staffid = '%s'" % (newconfirmedpassword, StaffEntry.get()))
-        conn.commit()
-        print("Password Changed")
-        conn.close()
+        if status == True:
+            cursor.execute("UPDATE users SET password = '%s' WHERE staffid = '%s'" % (newconfirmedpassword, StaffEntry.get()))
+            conn.commit()
+            print("Password Changed")
+            conn.close()
 
     except:
         status=False
         conn.rollback()
         print("No Change")
 
-    if status == True:
-        messagebox.showinfo("PASSWORD", "PASSWORD CHANGED")
-    else:
-        messagebox.showinfo("PASSWORD", "PASSWORD NOT CHANGED")
-    reset()
+    try:
+        if status == True:
+            messagebox.showinfo("PASSWORD", "PASSWORD CHANGED")
+    except:
+        if status == False:
+            messagebox.showinfo("PASSWORD", "PASSWORD NOT CHANGED")
+    #reset()
 
 
 
