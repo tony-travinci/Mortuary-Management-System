@@ -155,7 +155,7 @@ def addUser():
     except:
         if status == False:
             messagebox.showinfo("ERROR", "USER NOT ADDED")
-    reset()
+    #reset()
 
 ###############################################
 ####              INTERFACE               #####
