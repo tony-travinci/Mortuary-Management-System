@@ -27,7 +27,7 @@ def newPassConfcrypt():
 
 
 # Encrypt New password
-def newPasscrypt():
+def chnewPasscrypt():
     pent=NewPassEntry.get()
     pent=pent.encode('utf8')
     pword=hashlib.sha512()
@@ -37,12 +37,12 @@ def newPasscrypt():
     return password
 
 #############################################################################################################
-# This function {passencrypt()} reads password entered by user then compares it to the password in the db   #
+# This function {chpassencrypt()} reads password entered by user then compares it to the password in the db   #
 # The password entered is encrypted and compared to the encrypted password stored in the db                 #
 # The function returns a hashed password                                                                    #
 #############################################################################################################
 ## Using sha512()
-def passencrypt():
+def chpassencrypt():
     pent=OldPassEntry.get()
     pent = pent.encode('utf8')
     pword = hashlib.sha512()
@@ -53,9 +53,9 @@ def passencrypt():
 
 def changepass():
     uname=StaffEntry.get()
-    andy=passencrypt()
+    andy=chpassencrypt()
     status = False
-    newpassword=newPasscrypt()
+    newpassword=chnewPasscrypt()
     newconfirmedpassword=newPassConfcrypt()
 
     try:
@@ -205,41 +205,41 @@ NewPasswordVariable=StringVar()
 ConfirmedPasswordVariable=StringVar()
 
 
-root.geometry("1000x700+0+0")
+root.geometry("1366x768+0+0")
 
-Frame2=Frame(root,bg='Green',width=1000,height=700,bd=4,relief='ridge')
-Frame2.pack()
+ChangePassFrame=Frame(root, bg='Green', width=1000, height=700, bd=4, relief='ridge')
+ChangePassFrame.pack()
 
-TopLabelName=Label(Frame2,text="Change Password",bg='Green',font=('times',14,'italic'),fg='white')
+TopLabelName=Label(ChangePassFrame, text="Change Password", bg='Green', font=('times', 14, 'italic'), fg='white')
 TopLabelName.place(x=400,y=0)
 
 
-NameLabel=Label(Frame2,bg='green',text="STAFF ID",fg='white',font=('times',14,'italic'))
+NameLabel=Label(ChangePassFrame, bg='green', text="STAFF ID", fg='white', font=('times', 14, 'italic'))
 NameLabel.place(x=50,y=50)
 
-OldPassLabel=Label(Frame2,text="Old Password",bg='Green',font=('times',14,'italic'),fg='white')
+OldPassLabel=Label(ChangePassFrame, text="Old Password", bg='Green', font=('times', 14, 'italic'), fg='white')
 OldPassLabel.place(x=50,y=150)
 
-NewPassLabel=Label(Frame2,text="New Password",bg='Green',font=('times',14,'italic'),fg='white')
+NewPassLabel=Label(ChangePassFrame, text="New Password", bg='Green', font=('times', 14, 'italic'), fg='white')
 NewPassLabel.place(x=50,y=250)
 
-ConfirmPassLabel=Label(Frame2,text="Confirm Password",bg='Green',font=('times',14,'italic'),fg='white')
+ConfirmPassLabel=Label(ChangePassFrame, text="Confirm Password", bg='Green', font=('times', 14, 'italic'), fg='white')
 ConfirmPassLabel.place(x=50,y=350)
 
 
-StaffEntry=Entry(Frame2,font=('times',14,'italic'),fg='black',width=50,textvariable=StaffVariable)
+StaffEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
 StaffEntry.place(x=250,y=50)
 
-OldPassEntry=Entry(Frame2,font=('times',14,'italic'),fg='black',width=50,textvariable=PasswordVariable,show='*')
+OldPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=PasswordVariable, show='*')
 OldPassEntry.place(x=250,y=150)
 
-NewPassEntry=Entry(Frame2,font=('times',14,'italic'),fg='black',width=50,textvariable=NewPasswordVariable,show='*')
+NewPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=NewPasswordVariable, show='*')
 NewPassEntry.place(x=250,y=250)
 
-ConfirmPassEntry=Entry(Frame2,font=('times',14,'italic'),fg='black',width=50,textvariable=ConfirmedPasswordVariable,show='*')
+ConfirmPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=ConfirmedPasswordVariable, show='*')
 ConfirmPassEntry.place(x=250,y=350)
 
-SubmitButton=Button(Frame2,text="Submit",font=('times',14,'italic'),fg='Green',bd=2,relief='ridge',command=changepass)
+SubmitButton=Button(ChangePassFrame, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=changepass)
 SubmitButton.place(x=900,y=550)
 
 

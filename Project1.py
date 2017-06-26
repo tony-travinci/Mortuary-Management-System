@@ -12,8 +12,8 @@ root.geometry("1000x700+0+0")
 root.resizable(0,0)
 root.iconbitmap(default="morgue.ico")
 
-cnx=mysql.connector.connect(user='root',host='127.0.0.1',database='bodies')
-cursor=cnx.cursor(buffered=True)
+cnx=mysql.connector.connect(user='Andrew',host='127.0.0.1',database='test', password='andy')
+cursor=cnx.cursor()
 
 Frame1=Frame(root,width=1000,height=700)
 Frame1.pack()
@@ -603,7 +603,7 @@ LogoutButton=Button(RightFrame,font=('times',14,'italic'),bg='Green',text="Log O
 LogoutButton.place(x=15,y=510)
 
 
-cnx=mysql.connector.connect(user='root',host='127.0.0.1',database='bodies')
+cnx=mysql.connector.connect(user='Andrew',host='127.0.0.1',database='test', password='andy')
 cursor=cnx.cursor()
 cursor.execute('''CREATE TABLE IF NOT EXISTS trial(name VARCHAR (30) NOT NULL,idnumber VARCHAR (30) NOT NULL,kinname VARCHAR (30),kinnumber VARCHAR(30),bodywash INT,embalming INT,VIP INT,Flowers INT,Other INT,Coffin INT,Hearse INT,Tent INT,PostMortem INT,date1 date,PRIMARY KEY(idnumber))''')
 cnx.commit()
@@ -612,7 +612,7 @@ cnx.close()
 #CREATE TABLE IF NOT EXISTS deceased(name VARCHAR (30),idnumber VARCHAR (30),kinname VARCHAR (30),kinnumber VARCHAR (30),bodywash VARCHAR(10),embalming VARCHAR(10),VIP VARCHAR(10),Flowers VARCHAR(10),Other VARCHAR(10),Coffin VARCHAR(10),Hearse VARCHAR(10),Tent VARCHAR(10),PostMortem VARCHAR(10))
 #-----------------------------connect to the database--------------------------------------
 def connect():
-        cnx=mysql.connector.connect(user='root',host='127.0.0.1',database='bodies')
+        cnx=mysql.connector.connect(user='Andrew',host='127.0.0.1',database='test',password='andy')
         cursor=cnx.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS trial(name VARCHAR (30) NOT NULL,idnumber VARCHAR (30) NOT NULL,kinname VARCHAR (30),kinnumber VARCHAR(30),bodywash INT,embalming INT,VIP INT,Flowers INT,Other INT,Coffin INT,Hearse INT,Tent INT,PostMortem INT,date1 date,primary key(idnumber))''')
         if(Name1Entry.get()=="" and IdNumberEntry.get()==""):
@@ -734,7 +734,7 @@ NameEntry.place(x=100,y=100)
 
 def connect():
 
-    cnx=mysql.connector.connect(user='root',host='127.0.0.1',database='bodies')
+    cnx=mysql.connector.connect(user='Andrew',host='127.0.0.1',database='test', password='andy')
     cursor=cnx.cursor(buffered=True)
 
     cursor.execute("SELECT name FROM trial WHERE name='%s'" %(NameEntry.get()))
@@ -900,7 +900,7 @@ TopOne1LAbel=Label(BottomOne1Frame,image=image1)
 #TopOne1LAbel.pack(side='top',fill='both',expand='yes')
 TopOne1LAbel.place(x=792,y=0)
 
-cnx=mysql.connector.connect(user='root',host='127.0.0.1',database='bodies')
+cnx=mysql.connector.connect(user='Andrew',host='127.0.0.1',database='test',password='andy')
 cursor=cnx.cursor()
 
 tree["columns"]=("one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen")

@@ -155,7 +155,6 @@ def addUser():
     except:
         if status == False:
             messagebox.showinfo("ERROR", "USER NOT ADDED")
-    reset()
 
 ###############################################
 ####              INTERFACE               #####
@@ -168,45 +167,45 @@ EmailVariable=StringVar()
 StaffVariable=StringVar()
 ConfPasswordVariable=StringVar()
 
-root.geometry("1000x700+0+0")
-Frame1=Frame(root,bg='Green',width=1000,height=700,bd=4,relief='ridge')
-Frame1.pack()
+root.geometry("1366x768+0+0")
+AdminFrame1=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
+AdminFrame1.pack()
 #------------------------------------------Labels--------------------------------------------------------
-TopLabel=Label(Frame1,text="Add User",bg='Green',font=('times',14,'italic'),fg='white')
+TopLabel=Label(AdminFrame1, text="Add User", bg='Green', font=('times', 14, 'italic'), fg='white')
 TopLabel.place(x=400,y=0)
 
-StaffIDLabel=Label(Frame1,text="Staff ID",bg='Green',font=('times',14,'italic'),fg='white')
+StaffIDLabel=Label(AdminFrame1, text="Staff ID", bg='Green', font=('times', 14, 'italic'), fg='white')
 StaffIDLabel.place(x=50,y=50)
 
-NameLabel=Label(Frame1,text="Name",bg='Green',font=('times',14,'italic'),fg='white')
+NameLabel=Label(AdminFrame1, text="Name", bg='Green', font=('times', 14, 'italic'), fg='white')
 NameLabel.place(x=50,y=150)
 
-EmailLabel=Label(Frame1,text="Email",bg='Green',font=('times',14,'italic'),fg='white')
+EmailLabel=Label(AdminFrame1, text="Email", bg='Green', font=('times', 14, 'italic'), fg='white')
 EmailLabel.place(x=50,y=250)
 
-PasswordLabel=Label(Frame1,text="Password",bg='Green',font=('times',14,'italic'),fg='white')
+PasswordLabel=Label(AdminFrame1, text="Password", bg='Green', font=('times', 14, 'italic'), fg='white')
 PasswordLabel.place(x=50,y=350)
 
-ConfirmPasswordLabel=Label(Frame1,text="Confirm Password",bg='Green',font=('times',14,'italic'),fg='white')
+ConfirmPasswordLabel=Label(AdminFrame1, text="Confirm Password", bg='Green', font=('times', 14, 'italic'), fg='white')
 ConfirmPasswordLabel.place(x=50,y=450)
 
 #------------------------------------------Entries----------------------------------------------------------
-StaffIDEntry=Entry(Frame1,font=('times',14,'italic'),fg='black',width=50,textvariable=StaffVariable)
+StaffIDEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
 StaffIDEntry.place(x=250,y=50)
 
-NameEntry=Entry(Frame1,font=('times',14,'italic'),fg='black',width=50,textvariable=NameVariable)
+NameEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=NameVariable)
 NameEntry.place(x=250,y=150)
 
-EmailEntry=Entry(Frame1,font=('times',14,'italic'),fg='black',width=50,textvariable=EmailVariable)
+EmailEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=EmailVariable)
 EmailEntry.place(x=250,y=250)
 
-PasswordEntry=Entry(Frame1,font=('times',14,'italic'),fg='black',width=50,textvariable=PasswordVariable,show='*')
+PasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=PasswordVariable, show='*')
 PasswordEntry.place(x=250,y=350)
 
-ConfirmPasswordEntry=Entry(Frame1,font=('times',14,'italic'),fg='black',width=50,textvariable=ConfPasswordVariable,show='*')
+ConfirmPasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=ConfPasswordVariable, show='*')
 ConfirmPasswordEntry.place(x=250,y=450)
 
-ButtonSubmit=Button(Frame1,text="Submit",font=('times',14,'italic'),fg='Green',bd=2,relief='ridge',command=addUser)
-ButtonSubmit.place(x=900,y=550)
+ButtonSubmit=Button(AdminFrame1, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=addUser)
+ButtonSubmit.place(x=700,y=550)
 
 root.mainloop()
