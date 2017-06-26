@@ -132,15 +132,15 @@ def addUser():
     try:
         if status == True:
             if npass == ncpass:
-                cursor.execute("""INSERT INTO users(staffid, 
-                    name, password, email) 
-                    VALUES('%s','%s','%s','%s')""" % (
+                print("passwords match")
+                cursor.execute("""INSERT INTO users(staffid,name, password, email) VALUES('%s','%s','%s','%s')""" % (
                     sget, nget, ncpass, EmailEntry.get()))
                 conn.commit()
                 print("User Added")
                 conn.close()
                 print("Connection Closed")
                 status = True
+
             elif npass != ncpass:
                 messagebox.showinfo("ERROR", "PASSWORDS DO NOT MATCH")
                 print("No changes committed to db")

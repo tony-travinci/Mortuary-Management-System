@@ -72,20 +72,20 @@ ConfirmedPasswordVariable=StringVar()
 
 root.geometry("1366x768+0+0")
 
-ChangePassFrame=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
-ChangePassFrame.pack()
+DelUserFrame=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
+DelUserFrame.pack()
 
-TopLabelName=Label(ChangePassFrame, text="DELETE USER", bg='Green', font=('times', 18, 'italic'), fg='white')
+TopLabelName=Label(DelUserFrame, text="DELETE USER", bg='Green', font=('times', 18, 'italic'), fg='white')
 TopLabelName.place(x=400,y=200)
 
-NameLabel=Label(ChangePassFrame, bg='green', text="STAFF ID", fg='white', font=('times', 14, 'italic'))
+NameLabel=Label(DelUserFrame, bg='green', text="STAFF ID", fg='white', font=('times', 14, 'italic'))
 NameLabel.place(x=50,y=300)
 
-StaffEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
+StaffEntry=Entry(DelUserFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
 StaffEntry.place(x=250,y=300)
 
 
-SubmitButton=Button(ChangePassFrame, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=delete)
+SubmitButton=Button(DelUserFrame, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=delete)
 SubmitButton.place(x=700,y=400)
 
 
