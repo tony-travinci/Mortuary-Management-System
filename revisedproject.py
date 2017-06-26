@@ -18,6 +18,9 @@ except:
 def reset():
     NameVariable.set("")
     PasswordVariable.set("")
+    StaffVariable.set("")
+    ConfPasswordVariable.set("")
+    EmailVariable.set("")
 
 #############################################################################################################
 # This function {passencrypt()} reads password entered by user then compares it to the password in the db   #
@@ -81,7 +84,7 @@ def authentication():
             elif enm == 'Y':
                 LoginFrame.pack_forget()
                 MenuFrame.pack_forget()
-                RegistrationFrame.pack()
+                AdminFrame.pack()
                 CoffinServicesFrame.pack_forget()
         except:
             status = False
@@ -89,6 +92,143 @@ def authentication():
     elif status == False:
         messagebox.showinfo("LOGIN", "WRONG ID / PASSWORD")
     reset()
+
+
+# Encrypt New password
+def newPasscrypt():
+    pent=PasswordEntry.get()
+    pent=pent.encode('utf8')
+    pword=hashlib.sha512()
+    pword.update(pent)
+    password=pword.hexdigest()
+
+    return password
+
+
+# Encrypt Confirmed Password
+def newPassConfcrypt():
+    pent=ConfirmPasswordEntry.get()
+    pent=pent.encode('utf8')
+    pword=hashlib.sha512()
+    pword.update(pent)
+    password=pword.hexdigest()
+
+    return password
+
+
+def addUser():
+    status = False
+    global staffid
+    npass=newPasscrypt()
+    ncpass=newPassConfcrypt()
+    sget = StaffIDEntry.get()
+    nget=NameEntry.get()
+    pget=PasswordEntry.get()
+    cpget=ConfirmPasswordEntry.get()
+    eget=EmailEntry.get()
+
+    try:
+        if sget != "":
+            print(sget)
+            status = True
+        elif sget == "":
+            print("Blank Name Field")
+            messagebox.showinfo("ERROR", "STAFF ID CANNOT BE BLANK")
+            status = False
+
+    except:
+        status = False
+
+    try:
+        if status == True:
+            cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffIDEntry.get()))
+            staffid = cursor.fetchone()
+            if staffid is None:
+                print("empty id")
+                status = True
+            elif staffid is not None:
+                messagebox.showinfo("ERROR", "STAFF ID ALREADY EXIT")
+                status = False
+    except:
+        messagebox.showinfo("ERROR","STAFF ID ALREADY EXISTS")
+        status = False
+
+    try:
+        if status == True:
+            if nget != '':
+                print("Name Gotten")
+                status = True
+            elif nget == '':
+                print("No Name")
+                messagebox.showinfo("ERROR", "NAME FIELD CANNOT BE EMPTY")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if eget != "":
+                print(eget)
+                status = True
+
+            elif eget == "":
+                print("Blank Email Field")
+                messagebox.showinfo("ERROR", "EMAIL FIELD CANNOT BE BLANK")
+                status = False
+
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if pget != '':
+                print(npass)
+                status = True
+            elif pget == '':
+                print("No Password Entered")
+                messagebox.showinfo("ERROR", "PASSWORD FIELD CANNOT BE EMPTY")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if cpget != '':
+                print(ncpass)
+                status = True
+            elif cpget == '':
+                print("Confirmed password not entered")
+                messagebox.showinfo("ERROR", "CONFIRM PASSWORD FIELD CANNOT BE EMPTY")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if npass == ncpass:
+                cursor.execute("""INSERT INTO users(staffid, 
+                    name, password, email) 
+                    VALUES('%s','%s','%s','%s')""" % (
+                    sget, nget, ncpass, EmailEntry.get()))
+                conn.commit()
+                print("User Added")
+                conn.close()
+                print("Connection Closed")
+                status = True
+            elif npass != ncpass:
+                messagebox.showinfo("ERROR", "PASSWORDS DO NOT MATCH")
+                print("No changes committed to db")
+                conn.rollback()
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            messagebox.showinfo("SUCCESS", "NEW USER ADDED")
+    except:
+        if status == False:
+            messagebox.showinfo("ERROR", "USER NOT ADDED")
 
 
 # def menupage():
@@ -156,6 +296,107 @@ def comppackage():
     FlowerFrame.pack_forget()
     CoffinFrame.pack()
 
+def adminpage():
+    LoginFrame.pack_forget()
+    MenuFrame.pack_forget()
+    RegistrationFrame.pack_forget()
+    SelectFrame.pack_forget()
+    CoffinServicesFrame.pack_forget()
+    MauaFrame.pack_forget()
+    FlowerFrame.pack_forget()
+    CoffinFrame.pack_forget()
+
+def adduserpage():
+    LoginFrame.pack_forget()
+    MenuFrame.pack_forget()
+    RegistrationFrame.pack_forget()
+    SelectFrame.pack_forget()
+    CoffinServicesFrame.pack_forget()
+    MauaFrame.pack_forget()
+    FlowerFrame.pack_forget()
+    CoffinFrame.pack_forget()
+    AdminFrame.pack_forget()
+    AdminFrame1.pack()
+
+#---------------------Add User Frame-----------------
+AdminFrame1=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
+#AdminFrame1.pack()
+
+NameVariable=StringVar()
+PasswordVariable=StringVar()
+StaffVariable=StringVar()
+EmailVariable=StringVar()
+ConfPasswordVariable=StringVar()
+
+
+#------------------------------------------Labels--------------------------------------------------------
+TopLabel=Label(AdminFrame1, text="Add User", bg='Green', font=('times', 14, 'italic'), fg='white')
+TopLabel.place(x=400,y=0)
+
+StaffIDLabel=Label(AdminFrame1, text="Staff ID", bg='Green', font=('times', 14, 'italic'), fg='white')
+StaffIDLabel.place(x=50,y=50)
+
+NameLabel=Label(AdminFrame1, text="Name", bg='Green', font=('times', 14, 'italic'), fg='white')
+NameLabel.place(x=50,y=150)
+
+EmailLabel=Label(AdminFrame1, text="Email", bg='Green', font=('times', 14, 'italic'), fg='white')
+EmailLabel.place(x=50,y=250)
+
+PasswordLabel=Label(AdminFrame1, text="Password", bg='Green', font=('times', 14, 'italic'), fg='white')
+PasswordLabel.place(x=50,y=350)
+
+ConfirmPasswordLabel=Label(AdminFrame1, text="Confirm Password", bg='Green', font=('times', 14, 'italic'), fg='white')
+ConfirmPasswordLabel.place(x=50,y=450)
+
+#------------------------------------------Entries----------------------------------------------------------
+StaffIDEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
+StaffIDEntry.place(x=250,y=50)
+
+NameEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=NameVariable)
+NameEntry.place(x=250,y=150)
+
+EmailEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=EmailVariable)
+EmailEntry.place(x=250,y=250)
+
+PasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=PasswordVariable, show='*')
+PasswordEntry.place(x=250,y=350)
+
+ConfirmPasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=ConfPasswordVariable, show='*')
+ConfirmPasswordEntry.place(x=250,y=450)
+
+ButtonSubmit=Button(AdminFrame1, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=addUser)
+ButtonSubmit.place(x=700,y=550)
+
+#=--------------------admin page---------------------
+AdminFrame=Frame(root,width=1366,height=768,bd=2,relief='ridge',bg='Green')
+#AdminFrame.pack()
+
+AdminFrameLeft=Frame(AdminFrame,width=1010,height=768,relief='ridge',bg='Green',bd=2)
+AdminFrameLeft.pack(side=LEFT)
+
+AdminFrameRight=Frame(AdminFrame,width=356,height=768,relief='ridge',bg='Green',bd=2)
+AdminFrameRight.pack(side=RIGHT)
+
+AdminLeftpic= PhotoImage(file="logo.gif")
+AdminLeftlabel = Label(AdminFrameLeft, image=AdminLeftpic, bd=4, relief='ridge')
+AdminLeftlabel.place(x=0, y=0)
+
+AdminRightpic = PhotoImage(file="Egerton.gif")
+AdminRightlabel = Label(AdminFrameRight, image=AdminRightpic, bd=4, relief='ridge')
+AdminRightlabel.place(x=80, y=50)
+
+WelcomeAdminLabel=Label(AdminFrameLeft,text="Welcome Administrator",font=('times',14,'italic'),fg='white',bg='Green')
+WelcomeAdminLabel.place(x=420,y=200)
+
+ButtonAddUser=Button(AdminFrameLeft,text="Add User",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),fg='white',
+                     width=30,height=3,command=adduserpage)
+ButtonAddUser.place(x=380,y=250)
+
+ButtonChangeUser=Button(AdminFrameLeft,text="Change User Password",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),fg='white',width=30,height=3)
+ButtonChangeUser.place(x=380,y=450)
+
+ButtonDeleteUser=Button(AdminFrameLeft,text="Delete User",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),fg='white',width=30,height=3)
+ButtonDeleteUser.place(x=380,y=650)
 
 LoginFrame = Frame(root, width=1366, height=768, bd=2, bg='Green', relief='ridge')
 LoginFrame.pack()
