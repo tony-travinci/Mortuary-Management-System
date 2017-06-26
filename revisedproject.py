@@ -229,14 +229,185 @@ def addUser():
     except:
         if status == False:
             messagebox.showinfo("ERROR", "USER NOT ADDED")
+#--------------Add change password functionality to admin------------
+# Encrypt Confirmed New Password.
+def newPassConfcrypt():
+    pent=ConfirmPassEntry.get()
+    pent=pent.encode('utf8')
+    pword=hashlib.sha512()
+    pword.update(pent)
+    password=pword.hexdigest()
+    print(pword)
+    return password
 
 
-# def menupage():
-#	if((NameLoginEntry.get()=="Admin") and (PasswordLoginEntry.get()=="12345")):
-#		LoginFrame.pack_forget()
-#		MenuFrame.pack()
-#		RegistrationFrame.pack_forget()
-#		CoffinServicesFrame.pack_forget()
+# Encrypt New password
+def chnewPasscrypt():
+    pent=NewPassEntry.get()
+    pent=pent.encode('utf8')
+    pword=hashlib.sha512()
+    pword.update(pent)
+    password=pword.hexdigest()
+    print(pword)
+    return password
+
+#############################################################################################################
+# This function {chpassencrypt()} reads password entered by user then compares it to the password in the db   #
+# The password entered is encrypted and compared to the encrypted password stored in the db                 #
+# The function returns a hashed password                                                                    #
+#############################################################################################################
+## Using sha512()
+def chpassencrypt():
+    pent=OldPassEntry.get()
+    pent = pent.encode('utf8')
+    pword = hashlib.sha512()
+    pword.update(pent)
+    password = pword.hexdigest()
+    print(pword)
+    return password
+
+def changepass():
+    uname=StaffEntry.get()
+    andy=chpassencrypt()
+    status = False
+    newpassword=chnewPasscrypt()
+    newconfirmedpassword=newPassConfcrypt()
+
+    try:
+        if uname != '':
+            print(uname)
+            status = True
+        elif uname == '':
+            print("Blank staff id")
+            messagebox.showinfo("ERROR","STAFF ID FIELD CANNOT BE BLANK")
+            status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffEntry.get()))
+            staffid = cursor.fetchone()
+            staffidone = str(staffid[0])
+            print(staffidone)
+
+            if staffidone is not None:
+                print("cursor null")
+            if uname == staffid:
+                status = True
+            elif uname != staffidone:
+                print("User does not exist.")
+                messagebox.showinfo("ERROR", "USER DOES NOT EXISTS")
+                status == False
+    except:
+        if staffid is None:
+            messagebox.showinfo()
+        status = False
+        print("here")
+
+
+    try:
+        if status == True:
+            if OldPassEntry.get() != '':
+                print("Got existing  Password")
+                status = True
+            elif OldPassEntry.get() == '':
+                print("Current Pass empty")
+                messagebox.showinfo("Error", "Old password field cannot be empty!")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            cursor.execute("SELECT password FROM users WHERE staffid = '%s'" % (StaffEntry.get()))
+            password = cursor.fetchone()
+            passWord = str(password[0])
+
+            print("Got password")
+            if andy == passWord:
+                status = True
+                print("Correct Password")
+            elif andy != passWord:
+                messagebox.showinfo("Error", "Old Password entered does not match the old password!")
+                status = False
+                print("More")
+    except:
+        status=False
+        print("more")
+
+
+    try:
+        if status == True:
+            if NewPassEntry.get() != '':
+                print("Got new password")
+                status = True
+            elif NewPassEntry.get() == '':
+                print("New pass not entered")
+                messagebox.showinfo("Error", "New password field cannot be empty!")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if ConfirmPassEntry.get() != '':
+                print("Got confirmed password")
+                status = True
+            elif ConfirmPassEntry.get() == '':
+                print("Confirmed password not entered")
+                messagebox.showinfo("Error", "Confirmed password field cannot be empty!")
+                status = False
+    except:
+        status = False
+
+    try:
+        if status == True:
+            if newpassword == newconfirmedpassword:
+                print("Matching Passwords")
+                status = True
+            elif newpassword != newconfirmedpassword:
+                print("Passwords do not match")
+                status = False
+                messagebox.showinfo("Error", "New and Confirmed do not match!")
+    except:
+        status = False
+        print("No Changes made")
+
+    try:
+        if status == True:
+            if andy != newconfirmedpassword:
+                status = True
+                print("New and old passwords do not match")
+            elif andy == newconfirmedpassword:
+                messagebox.showinfo("Error", "New and Old password cannot be the same!")
+                status = False
+    except:
+        status = False
+
+
+    try:
+        if status == True:
+            cursor.execute("UPDATE users SET password = '%s' WHERE staffid = '%s'" % (newconfirmedpassword, StaffEntry.get()))
+            conn.commit()
+            print("Password Changed")
+            conn.close()
+
+    except:
+        status=False
+        conn.rollback()
+        print("No Change")
+
+    try:
+        if status == True:
+            messagebox.showinfo("PASSWORD", "PASSWORD CHANGED")
+    except:
+        if status == False:
+            messagebox.showinfo("PASSWORD", "PASSWORD NOT CHANGED")
+    if status == True:
+        reset()
+
+
 def menupage2():
     LoginFrame.pack_forget()
     MenuFrame.pack()
@@ -317,6 +488,9 @@ def adduserpage():
     CoffinFrame.pack_forget()
     AdminFrame.pack_forget()
     AdminFrame1.pack()
+
+#-------------------------Change Password Frame----------------------
+
 
 #---------------------Add User Frame-----------------
 AdminFrame1=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
