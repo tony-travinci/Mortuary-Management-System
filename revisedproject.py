@@ -92,11 +92,12 @@ def authentication():
     elif status == False:
         messagebox.showinfo("LOGIN", "WRONG ID / PASSWORD")
     reset()
+    conn.close()
 
 
 # Encrypt New password
-def newPasscrypt():
-    pent=PasswordEntry.get()
+def newPPasscrypt():
+    pent=PasswordNewEntry.get()
     pent=pent.encode('utf8')
     pword=hashlib.sha512()
     pword.update(pent)
@@ -106,8 +107,8 @@ def newPasscrypt():
 
 
 # Encrypt Confirmed Password
-def newPassConfcrypt():
-    pent=ConfirmPasswordEntry.get()
+def newPPassConfcrypt():
+    pent=ConfirmNewPasswordEntry.get()
     pent=pent.encode('utf8')
     pword=hashlib.sha512()
     pword.update(pent)
@@ -119,12 +120,12 @@ def newPassConfcrypt():
 def addUser():
     status = False
     global staffid
-    npass=newPasscrypt()
-    ncpass=newPassConfcrypt()
-    sget = StaffIDEntry.get()
-    nget=NameEntry.get()
-    pget=PasswordEntry.get()
-    cpget=ConfirmPasswordEntry.get()
+    npass=newPPasscrypt()
+    ncpass=newPPassConfcrypt()
+    sget = StaffIDNewEntry.get()
+    nget=NameNewEntry.get()
+    pget=PasswordNewEntry.get()
+    cpget=ConfirmNewPasswordEntry.get()
     eget=EmailEntry.get()
 
     try:
@@ -141,8 +142,10 @@ def addUser():
 
     try:
         if status == True:
-            cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffIDEntry.get()))
-            staffid = cursor.fetchone()
+            cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffIDNewEntry.get()))
+            staffidtwo = cursor.fetchone()
+            staffidtwo1=str(staffidtwo[0])
+            print(staffidtwo1)
             if staffid is None:
                 print("empty id")
                 status = True
@@ -206,6 +209,7 @@ def addUser():
     try:
         if status == True:
             if npass == ncpass:
+                print("True")
                 cursor.execute("""INSERT INTO users(staffid, 
                     name, password, email) 
                     VALUES('%s','%s','%s','%s')""" % (
@@ -229,6 +233,7 @@ def addUser():
     except:
         if status == False:
             messagebox.showinfo("ERROR", "USER NOT ADDED")
+
 #--------------Add change password functionality to admin------------
 # Encrypt Confirmed New Password.
 def newPassConfcrypt():
@@ -298,7 +303,7 @@ def changepass():
             elif uname != staffidone:
                 print("User does not exist.")
                 messagebox.showinfo("ERROR", "USER DOES NOT EXISTS")
-                status == False
+                status = False
     except:
         if staffid is None:
             messagebox.showinfo()
@@ -408,6 +413,62 @@ def changepass():
         reset()
 
 
+def delete():
+    status = False
+    try:
+        if StaffDelEntry.get() != "":
+            status = True
+        elif StaffEntry.get() == "":
+            messagebox.showinfo("ERROR","STAFF ID FIELD CANNOT BE EMPTY")
+            status=False
+    except:
+        status=False
+    try:
+        if status == True:
+            cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (StaffDelEntry.get()))
+            staffid = cursor.fetchone()
+
+            if staffid is not None:
+                print("User exists")
+                status = True
+            else:
+                messagebox.showinfo("ERROR","USER DOES NOT EXIST")
+                status = False
+    except:
+        status=False
+
+    try:
+        if status == True:
+            cursor.execute("SELECT enum FROM users WHERE staffid = '%s'"% (StaffDelEntry.get()))
+            enm=cursor.fetchone()
+            enm=str(enm[0])
+            if enm == 'Y':
+                messagebox.showinfo("ERROR","ADMIN CANNOT BE DELETED")
+                status = False
+            elif enm == 'N':
+                print("Normal user")
+                status = True
+    except:
+        status = False
+
+
+
+    try:
+        if status == True:
+            cursor.execute("DELETE FROM users WHERE staffid = '%s'" % (StaffDelEntry.get()))
+            conn.commit()
+            messagebox.showinfo("SUCCESS", "USER DELETED")
+            print("User Deleted")
+            adminpage()
+    except:
+        if status == False:
+            conn.rollback()
+            print("User not deleted")
+            messagebox.showinfo("Error", "User was not deleted")
+            adminpage()
+
+
+
 def menupage2():
     LoginFrame.pack_forget()
     MenuFrame.pack()
@@ -502,6 +563,55 @@ def Changepass1():
     AdminFrame1.pack_forget()
     ChangePassFrame.pack()
 
+def deluser():
+    LoginFrame.pack_forget()
+    MenuFrame.pack_forget()
+    RegistrationFrame.pack_forget()
+    SelectFrame.pack_forget()
+    CoffinServicesFrame.pack_forget()
+    MauaFrame.pack_forget()
+    FlowerFrame.pack_forget()
+    CoffinFrame.pack_forget()
+    AdminFrame.pack_forget()
+    AdminFrame1.pack_forget()
+    ChangePassFrame.pack_forget()
+    DelUserFrame.pack()
+
+def goingback():
+    LoginFrame.pack_forget()
+    MenuFrame.pack_forget()
+    RegistrationFrame.pack_forget()
+    SelectFrame.pack_forget()
+    CoffinServicesFrame.pack_forget()
+    MauaFrame.pack_forget()
+    FlowerFrame.pack_forget()
+    CoffinFrame.pack_forget()
+    AdminFrame.pack()
+    AdminFrame1.pack_forget()
+    ChangePassFrame.pack_forget()
+    DelUserFrame.pack_forget()
+
+#-------------------------Delete user Frame--------------------------
+DelUserFrame = Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
+#DelUserFrame.pack()
+StaffVariable=StringVar()
+
+TopLabelName = Label(DelUserFrame, text="DELETE USER", bg='Green', font=('times', 18, 'italic'), fg='white')
+TopLabelName.place(x=400, y=200)
+
+NameLabel = Label(DelUserFrame, bg='green', text="STAFF ID", fg='white', font=('times', 14, 'italic'))
+NameLabel.place(x=50, y=300)
+
+StaffDelEntry = Entry(DelUserFrame, font=('times', 14, 'italic'), fg='black', width=50)
+StaffDelEntry.place(x=250, y=300)
+
+SubmitButton = Button(DelUserFrame, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge',
+                      command=delete)
+SubmitButton.place(x=700, y=400)
+Backbtn = Button(DelUserFrame, text="Back", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge',
+                 command=goingback)
+Backbtn.place(x=300, y=400)
+
 #-------------------------Change Password Frame----------------------
 StaffVariable=StringVar()
 PasswordVariable=StringVar()
@@ -529,20 +639,24 @@ ConfirmPassLabel=Label(ChangePassFrame, text="Confirm Password", bg='Green', fon
 ConfirmPassLabel.place(x=50,y=350)
 
 
-StaffEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
+StaffEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50)
 StaffEntry.place(x=250,y=50)
 
-OldPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=PasswordVariable, show='*')
+OldPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, show='*')
 OldPassEntry.place(x=250,y=150)
 
-NewPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=NewPasswordVariable, show='*')
+NewPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, show='*')
 NewPassEntry.place(x=250,y=250)
 
-ConfirmPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=ConfirmedPasswordVariable, show='*')
+ConfirmPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, show='*')
 ConfirmPassEntry.place(x=250,y=350)
 
 SubmitButton=Button(ChangePassFrame, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=changepass)
 SubmitButton.place(x=900,y=550)
+
+Backbtn = Button(ChangePassFrame, text="Back", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge',
+                 command=goingback)
+Backbtn.place(x=300, y=550)
 
 #---------------------Add User Frame-----------------
 AdminFrame1=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
@@ -575,23 +689,27 @@ ConfirmPasswordLabel=Label(AdminFrame1, text="Confirm Password", bg='Green', fon
 ConfirmPasswordLabel.place(x=50,y=450)
 
 #------------------------------------------Entries----------------------------------------------------------
-StaffIDEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
-StaffIDEntry.place(x=250,y=50)
+StaffIDNewEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50)
+StaffIDNewEntry.place(x=250,y=50)
 
-NameEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=NameVariable)
-NameEntry.place(x=250,y=150)
+NameNewEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50)
+NameNewEntry.place(x=250,y=150)
 
-EmailEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=EmailVariable)
+EmailEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50)
 EmailEntry.place(x=250,y=250)
 
-PasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=PasswordVariable, show='*')
-PasswordEntry.place(x=250,y=350)
+PasswordNewEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, show='*')
+PasswordNewEntry.place(x=250,y=350)
 
-ConfirmPasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, textvariable=ConfPasswordVariable, show='*')
-ConfirmPasswordEntry.place(x=250,y=450)
+ConfirmNewPasswordEntry=Entry(AdminFrame1, font=('times', 14, 'italic'), fg='black', width=50, show='*')
+ConfirmNewPasswordEntry.place(x=250,y=450)
 
 ButtonSubmit=Button(AdminFrame1, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=addUser)
 ButtonSubmit.place(x=700,y=550)
+
+Backbtn = Button(AdminFrame1, text="Back", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge',
+                 command=goingback)
+Backbtn.place(x=300, y=550)
 
 #=--------------------admin page---------------------
 AdminFrame=Frame(root,width=1366,height=768,bd=2,relief='ridge',bg='Green')
@@ -622,7 +740,8 @@ ButtonChangeUser=Button(AdminFrameLeft,text="Change User Password",bd=2,relief='
                         fg='white',width=30,height=3, command=Changepass1)
 ButtonChangeUser.place(x=380,y=450)
 
-ButtonDeleteUser=Button(AdminFrameLeft,text="Delete User",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),fg='white',width=30,height=3)
+ButtonDeleteUser=Button(AdminFrameLeft,text="Delete User",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),
+                        fg='white',width=30,height=3,command=deluser)
 ButtonDeleteUser.place(x=380,y=650)
 
 LoginFrame = Frame(root, width=1366, height=768, bd=2, bg='Green', relief='ridge')
@@ -675,7 +794,7 @@ PasswordLabel.place(x=100, y=450)
 NameLoginEntry = Entry(LoginFrameLeft, width=40, font=('times', 18, 'italic'), textvariable=NameVariable)
 NameLoginEntry.place(x=380, y=350)
 
-PasswordLoginEntry = Entry(LoginFrameLeft, width=40, font=('times', 18, 'italic'), show='*',textvariable=PasswordVariable)
+PasswordLoginEntry = Entry(LoginFrameLeft, width=40, font=('times', 18, 'italic'), show='*')
 PasswordLoginEntry.place(x=380, y=450)
 
 LoginButton = Button(LoginFrameLeft, width=10, height=2, text="Log In", bg='Green', command=authentication, fg='white',
