@@ -1,13 +1,96 @@
 from tkinter import *
+from tkinter import messagebox
 import time
+import mysql.connector
+import hashlib
 root=Tk()
 
-def menupage():
-	if((NameLoginEntry.get()=="Admin") and (PasswordLoginEntry.get()=="12345")):
-		LoginFrame.pack_forget()
-		MenuFrame.pack()
-		RegistrationFrame.pack_forget()
-		CoffinServicesFrame.pack_forget()
+##############################################
+####           MYSQL CODE                #####
+##############################################
+try:
+    conn = mysql.connector.connect(user='Andrew', password='andy', database='test', host='127.0.0.1', port='3306')
+    cursor = conn.cursor()
+except:
+    raise ValueError("Contact System Admin. Database Offline")
+
+#############################################################################################################
+# This function {passencrypt()} reads password entered by user then compares it to the password in the db   #
+# The password entered is encrypted and compared to the encrypted password stored in the db                 #
+# The function returns a hashed password                                                                    #
+#############################################################################################################
+
+
+# Using sha512()
+def passencrypt():
+    pent=PasswordLoginEntry.get()
+    pent = pent.encode('utf8')
+    pword = hashlib.sha512()
+    pword.update(pent)
+    password = pword.hexdigest()
+    print(pword)
+    return password
+
+def authentication():
+    uname = NameLoginEntry.get()
+    pword = PasswordLoginEntry.get()
+    andy = passencrypt()
+
+    status = False
+    try:
+        cursor.execute("SELECT staffid FROM users where staffid ='%s'" % (NameLoginEntry.get()))
+        staffid = cursor.fetchone()
+        staffid = str(staffid[0])
+        print(staffid)
+
+        if staffid is not None:
+            print("cursor null")
+
+            if uname == staffid:
+                status = True
+
+        cursor.execute("SELECT password FROM users WHERE staffid = '%s'" % (NameLoginEntry.get()))
+        password = cursor.fetchone()
+        passWord = str(password[0])
+
+        if status == True:
+            print("Got password")
+            if andy != passWord:
+                status = False
+                print("Wrong Password")
+    except:
+        status = False
+        print("here")
+
+    if status == True:
+        messagebox.showinfo("LOGIN", "Login Successful.")
+        try:
+            cursor.execute("SELECT enum FROM users WHERE staffid = '%s'" % (NameLoginEntry.get()))
+            en=cursor.fetchone()
+            enm=str(en[0])
+            if enm == "N":
+                LoginFrame.pack_forget()
+                MenuFrame.pack()
+                RegistrationFrame.pack_forget()
+                CoffinServicesFrame.pack_forget()
+            elif enm == 'Y':
+                LoginFrame.pack_forget()
+                MenuFrame.pack_forget()
+                RegistrationFrame.pack()
+                CoffinServicesFrame.pack_forget()
+        except:
+            status = False
+
+    elif status == False:
+        messagebox.showinfo("LOGIN", "WRONG ID / PASSWORD")
+
+
+#def menupage():
+#	if((NameLoginEntry.get()=="Admin") and (PasswordLoginEntry.get()=="12345")):
+#		LoginFrame.pack_forget()
+#		MenuFrame.pack()
+#		RegistrationFrame.pack_forget()
+#		CoffinServicesFrame.pack_forget()
 def menupage2():
 	LoginFrame.pack_forget()
 	MenuFrame.pack()
@@ -106,10 +189,10 @@ PasswordLabel.place(x=100,y=450)
 NameLoginEntry=Entry(LoginFrameLeft,width=40,font=('times',18,'italic'))
 NameLoginEntry.place(x=380,y=350)
 
-PasswordLoginEntry=Entry(LoginFrameLeft,width=40,font=('times',18,'italic'))
+PasswordLoginEntry=Entry(LoginFrameLeft,width=40,font=('times',18,'italic'), show='*')
 PasswordLoginEntry.place(x=380,y=450)
 
-LoginButton=Button(LoginFrameLeft,width=10,height=2,text="Log In",bg='Green',command=menupage,fg='white',font=('times',14,'italic'),relief='ridge')
+LoginButton=Button(LoginFrameLeft,width=10,height=2,text="Log In",bg='Green',command=authentication,fg='white',font=('times',14,'italic'),relief='ridge')
 LoginButton.place(x=750,y=600)
 #-----------------------------------------menu page-----------------------------------------------------------------
 MenuFrame=Frame(root,width=1366,height=768,bg='Green',bd=2,relief='ridge')
