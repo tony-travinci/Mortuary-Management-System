@@ -1,18 +1,17 @@
 from tkinter import *
 from tkinter import messagebox
-import datetime
-from datetime import time
 import time
-import mysql
 import mysql.connector
 import hashlib
 
 ##############################################
 ####           MYSQL CODE                #####
 ##############################################
-conn = mysql.connector.connect(user='Andrew', password='andy', database='test', host='127.0.0.1', port='3306')
-cursor = conn.cursor()
-
+try:
+    conn = mysql.connector.connect(user='Andrew', password='andy', database='test', host='127.0.0.1', port='3306')
+    cursor = conn.cursor()
+except:
+    raise ValueError("Contact System Admin. Database Offline")
 
 #############################################################################################################
 # This function {passencrypt()} reads password entered by user then compares it to the password in the db   #
@@ -21,7 +20,7 @@ cursor = conn.cursor()
 #############################################################################################################
 
 
-## Using sha512()
+# Using sha512()
 def passencrypt():
     pent=PasswordEntry.get()
     pent = pent.encode('utf8')
@@ -30,6 +29,7 @@ def passencrypt():
     password = pword.hexdigest()
     print(pword)
     return password
+
 
 def reset():
     NameVariable.set("")
@@ -94,11 +94,11 @@ MiddleFrame = Frame(root, width=1001, height=600, bd=8, bg='green', relief='ridg
 MiddleFrame.pack(side=LEFT, expand=True)
 
 TopMarking = Label(MiddleFrame, text="Egerton University Mortuary Management System", width=38, bg='Green',
-                   font=('times', 18, 'italic'), fg='white', bd=4, relief='ridge')
+                  font=('times', 18, 'italic'), fg='white', bd=4, relief='ridge')
 TopMarking.place(x=250, y=0)
 
 DateLabel = Entry(MiddleFrame, width=10, font=('times', 18, 'italic'), textvariable=Date1, bg='Green', bd=4, fg='white',
-                  relief='ridge')
+                 relief='ridge')
 DateLabel.place(x=854, y=0)
 
 Name = Label(MiddleFrame, text="Staff Number", width=10, bg='Green', font=('times', 14, 'italic'), fg='white')
@@ -120,11 +120,11 @@ LogInButton = Button(MiddleFrame, width=20, text="Log In", font=('times', 14, 'i
 LogInButton.place(x=400, y=250)
 
 LogInButton = Button(MiddleFrame, width=20, text="Forgot Password", font=('times', 14, 'italic'), bg='Green',
-                     fg='white', relief='ridge')
+                    fg='white', relief='ridge')
 LogInButton.place(x=400, y=300)
 
 BottomMarking = Label(MiddleFrame, text="Transforming Lives Through Quality Education", width=38, bg='Green',
-                      font=('times', 22, 'italic'), fg='bisque2')
+                     font=('times', 22, 'italic'), fg='bisque2')
 BottomMarking.place(x=200, y=450)
 
 image1 = PhotoImage(file="logo.gif")
