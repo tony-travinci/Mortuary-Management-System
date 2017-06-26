@@ -489,8 +489,60 @@ def adduserpage():
     AdminFrame.pack_forget()
     AdminFrame1.pack()
 
-#-------------------------Change Password Frame----------------------
+def Changepass1():
+    LoginFrame.pack_forget()
+    MenuFrame.pack_forget()
+    RegistrationFrame.pack_forget()
+    SelectFrame.pack_forget()
+    CoffinServicesFrame.pack_forget()
+    MauaFrame.pack_forget()
+    FlowerFrame.pack_forget()
+    CoffinFrame.pack_forget()
+    AdminFrame.pack_forget()
+    AdminFrame1.pack_forget()
+    ChangePassFrame.pack()
 
+#-------------------------Change Password Frame----------------------
+StaffVariable=StringVar()
+PasswordVariable=StringVar()
+NewPasswordVariable=StringVar()
+ConfirmedPasswordVariable=StringVar()
+
+
+ChangePassFrame=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
+#ChangePassFrame.pack()
+
+TopLabelName=Label(ChangePassFrame, text="Change Password", bg='Green', font=('times', 14, 'italic'), fg='white')
+TopLabelName.place(x=400,y=0)
+
+
+NameLabel=Label(ChangePassFrame, bg='green', text="STAFF ID", fg='white', font=('times', 14, 'italic'))
+NameLabel.place(x=50,y=50)
+
+OldPassLabel=Label(ChangePassFrame, text="Old Password", bg='Green', font=('times', 14, 'italic'), fg='white')
+OldPassLabel.place(x=50,y=150)
+
+NewPassLabel=Label(ChangePassFrame, text="New Password", bg='Green', font=('times', 14, 'italic'), fg='white')
+NewPassLabel.place(x=50,y=250)
+
+ConfirmPassLabel=Label(ChangePassFrame, text="Confirm Password", bg='Green', font=('times', 14, 'italic'), fg='white')
+ConfirmPassLabel.place(x=50,y=350)
+
+
+StaffEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=StaffVariable)
+StaffEntry.place(x=250,y=50)
+
+OldPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=PasswordVariable, show='*')
+OldPassEntry.place(x=250,y=150)
+
+NewPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=NewPasswordVariable, show='*')
+NewPassEntry.place(x=250,y=250)
+
+ConfirmPassEntry=Entry(ChangePassFrame, font=('times', 14, 'italic'), fg='black', width=50, textvariable=ConfirmedPasswordVariable, show='*')
+ConfirmPassEntry.place(x=250,y=350)
+
+SubmitButton=Button(ChangePassFrame, text="Submit", font=('times', 14, 'italic'), fg='Green', bd=2, relief='ridge', command=changepass)
+SubmitButton.place(x=900,y=550)
 
 #---------------------Add User Frame-----------------
 AdminFrame1=Frame(root, bg='Green', width=1366, height=768, bd=4, relief='ridge')
@@ -566,7 +618,8 @@ ButtonAddUser=Button(AdminFrameLeft,text="Add User",bd=2,relief='ridge',bg='Gree
                      width=30,height=3,command=adduserpage)
 ButtonAddUser.place(x=380,y=250)
 
-ButtonChangeUser=Button(AdminFrameLeft,text="Change User Password",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),fg='white',width=30,height=3)
+ButtonChangeUser=Button(AdminFrameLeft,text="Change User Password",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),
+                        fg='white',width=30,height=3, command=Changepass1)
 ButtonChangeUser.place(x=380,y=450)
 
 ButtonDeleteUser=Button(AdminFrameLeft,text="Delete User",bd=2,relief='ridge',bg='Green',font=('times',14,'italic'),fg='white',width=30,height=3)
