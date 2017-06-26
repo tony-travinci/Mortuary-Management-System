@@ -14,6 +14,7 @@ try:
 except:
     raise ValueError("Contact System Admin. Database Offline")
 
+
 #############################################################################################################
 # This function {passencrypt()} reads password entered by user then compares it to the password in the db   #
 # The password entered is encrypted and compared to the encrypted password stored in the db                 #
@@ -157,7 +158,8 @@ Date1=StringVar()
 Date1.set(time.strftime("%Y/%m/%d"))
 
 
-DateEntryLogin=Entry(LoginFrameRight,width=10,bg='Green',textvariable=Date1,font=('times',20,'italic'),fg='white',relief='ridge',bd=2)
+DateEntryLogin=Entry(LoginFrameRight,width=10,bg='Green',textvariable=Date1,font=('times',20,'italic'),fg='white',
+                     relief='ridge',bd=2)
 DateEntryLogin.place(x=100,y=20)
 
 #DateLabel=Label(LoginFrameRight,textvariable=Date1,bd=4,font=('times',15,'italic'),relief='ridge')
@@ -166,7 +168,8 @@ DateEntryLogin.place(x=100,y=20)
 
 
 
-TopLabelLogin=Label(LoginFrameLeft,text="Egerton University Funeral Home Management System",font=('times',16,'italic'),bg='green',fg='white',relief='ridge',bd=2)
+TopLabelLogin=Label(LoginFrameLeft,text="Egerton University Funeral Home Management System",font=('times',16,'italic'),
+                    bg='green',fg='white',relief='ridge',bd=2)
 TopLabelLogin.place(x=250,y=180)
 
 imageloginleft=PhotoImage(file="logo.gif")
